@@ -46,7 +46,6 @@ resource "aws_network_acl" "network_acl" {
       icmp_code       = lookup(egress.value, "icmp_code", 0)
     }
   }
-
   tags = merge(
     {
       Name = var.network_acl_name != "" ? lower(var.network_acl_name) : "${lower(var.name)}-network-acl-${lower(var.environment)}"

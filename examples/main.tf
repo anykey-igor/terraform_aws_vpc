@@ -190,7 +190,7 @@ module "vpc" {
   # NAT
   enable_nat_gw = true # true/false
   nat_gw_name   = "My_NAT_Gateway"
-  single_nat_gw = true # true/false
+  single_nat_gw = false # true/false
 
   # DHCP
   enable_dhcp                           = true # true/false
@@ -202,18 +202,38 @@ module "vpc" {
   vpc_dhcp_options_netbios_node_type    = ""
 
   # Network ACLs
-  enable_network_acl     = true # true/false
-  network_acl_name       = "My_Network_ACLs"
-  network_acl_vpc_id     = ""
+  enable_network_acl = true # true/false
+  network_acl_name   = "My_Network_ACLs"
+  network_acl_vpc_id = ""
   #network_acl_subnet_ids = null
-  #network_acl_ingress     = []
-  #network_acl_egress      = []
-  #enable_network_acl_rule = true # true/false
+  network_acl_ingress = [{
+    from_port       = 0
+    to_port         = 0
+    rule_no         = 100
+    action          = "allow"
+    protocol        = -1
+    cidr_block      = "0.0.0.0/0"
+    ipv6_cidr_block = null
+    icmp_type       = 0
+    icmp_code       = 0
+  }]
 
-
+  network_acl_egress = [{
+    from_port       = 0
+    to_port         = 0
+    rule_no         = 100
+    action          = "allow"
+    protocol        = -1
+    cidr_block      = "0.0.0.0/0"
+    ipv6_cidr_block = null
+    icmp_type       = 0
+    icmp_code       = 0
+  }]
+  #manage_default_route_table = false
+  #default_route_table_name   = "My_Default_Route_Table"
+  #default_route_table_routes = []
   # EIP
-#  enable_eip   = false
-#  nat_eip_name = ""
-
+  #  enable_eip   = false
+  #  nat_eip_name = ""
 
 }
