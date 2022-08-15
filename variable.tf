@@ -5,7 +5,9 @@ variable "region" {
   description = "The region where to deploy this code (e.g. eu-center-1)"
   default     = "eu-central-1"
 }
-variable "vpc_id" {default = ""}
+variable "vpc_id" {
+  default = ""
+}
 variable "availability_zones" {
   description = "A list of Availability zones in the region"
   type        = list(string)
@@ -291,7 +293,6 @@ variable "enable_network_acl_rule" {
   type        = bool
   default     = false
 }
-
 variable "network_acl_rule_parameter" {
   description = "Set NACLs rules."
   default = [
@@ -312,107 +313,9 @@ variable "network_acl_rule_parameter" {
   ]
 }
 
-#---------------------------------------------------------------
-# AWS route
-#---------------------------------------------------------------
-variable "peering_destination_cidr_block" {
-  description = "Set CIDR block for peering routing"
-  default     = null
-}
-
-variable "peering_gateway_id" {
-  description = "Set gateway_id for peering"
-  default     = null
-}
-
-variable "private_custom_peering_destination_cidr_block" {
-  description = "Set CIDR block for private custom routing"
-  default     = null
-}
-
-variable "private_custom_gateway_id" {
-  description = "Set gateway ID for private custom routing"
-  default     = null
-}
-
-variable "public_custom_peering_destination_cidr_block" {
-  description = "Set CIDR block for public custom routing"
-  default     = null
-}
-
-variable "public_custom_gateway_id" {
-  description = "Set gateway ID for public custom routing"
-  default     = null
-}
-
-variable "route_timeouts" {
-  description = "Set timeouts for route"
-  default     = {}
-}
-
-variable "enable_custom_route" {
-  description = "Enable custom route"
-  default     = false
-}
-
-variable "custom_route_route_table_id" {
-  description = "(Required) The ID of the routing table."
-  default     = null
-}
-
-variable "custom_route_destination_cidr_block" {
-  description = "(Optional) The destination CIDR block."
-  default     = null
-}
-
-variable "custom_route_destination_ipv6_cidr_block" {
-  description = "(Optional) The destination IPv6 CIDR block."
-  default     = null
-}
-
-variable "custom_route_vpc_peering_connection_id" {
-  description = "(Optional) Identifier of a VPC peering connection."
-  default     = null
-}
-
-variable "custom_route_egress_only_gateway_id" {
-  description = "(Optional) Identifier of a VPC Egress Only Internet Gateway."
-  default     = null
-}
-
-variable "custom_route_gateway_id" {
-  description = "(Optional) Identifier of a VPC internet gateway or a virtual private gateway."
-  default     = null
-}
-
-variable "custom_route_nat_gateway_id" {
-  description = "(Optional) Identifier of a VPC NAT gateway."
-  default     = null
-}
-
-variable "custom_route_local_gateway_id" {
-  description = "(Optional) Identifier of a Outpost local gateway."
-  default     = null
-}
-
-variable "custom_route_network_interface_id" {
-  description = "(Optional) Identifier of an EC2 network interface."
-  default     = null
-}
-
-variable "custom_route_transit_gateway_id" {
-  description = "(Optional) Identifier of an EC2 Transit Gateway."
-  default     = null
-}
-
-variable "custom_route_vpc_endpoint_id" {
-  description = "(Optional) Identifier of a VPC Endpoint."
-  default     = null
-}
-
-#---------------------------------------------------------------
-# Variable for AWS route table
-#---------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+# Variable for AWS Default Route Table
+#---------------------------------------------------------------------------------------------------------------------
 variable "manage_default_route_table" {
   description = "Should be true to manage default route table"
   type        = bool
@@ -433,118 +336,85 @@ variable "default_route_table_propagating_vgws" {
   type        = list(string)
   default     = []
 }
-
 variable "default_route_table_routes" {
   description = "Configuration block of routes. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_route_table#route"
   type        = list(map(string))
   default     = []
 }
-
-# private route tables
-variable "private_route_tables_name" {
-  description = "Set name for private route tables"
-  default     = ""
-}
-
-variable "private_route_tables_propagating_vgws" {
-  description = "A list of VGWs the private route table should propagate."
-  default     = null
-}
-
-variable "private_route_tables_vpc_id" {
-  description = "The VPC ID."
-  default     = ""
-}
-
-variable "private_route_tables_route_ipv4" {
-  description = "The CIDR block of the route for IPv4."
-  default     = []
-}
-
-variable "private_route_tables_route_ipv6" {
-  description = "(Optional) The Ipv6 CIDR block of the route."
-  default     = []
-}
-
-# public route tables
+#---------------------------------------------------------------------------------------------------------------------
+# Variable for AWS Public route tables
+#---------------------------------------------------------------------------------------------------------------------
 variable "public_route_tables_name" {
   description = "Set name for public route tables"
   default     = ""
 }
-
 variable "public_route_tables_propagating_vgws" {
   description = "A list of VGWs the public route table should propagate."
   default     = null
 }
-
 variable "public_route_tables_vpc_id" {
   description = "The VPC ID."
   default     = ""
 }
-
 variable "public_route_tables_route_ipv4" {
   description = "The CIDR block of the route for IPv4."
   default     = []
 }
-
 variable "public_route_tables_route_ipv6" {
   description = "(Optional) The Ipv6 CIDR block of the route."
   default     = []
 }
 
-# public route tables for k8s
-variable "k8s_public_route_tables_name" {
-  description = "Set name for public route tables"
+#---------------------------------------------------------------------------------------------------------------------
+# Variable for AWS Private Route Tables
+#---------------------------------------------------------------------------------------------------------------------
+variable "private_route_tables_name" {
+  description = "Set name for private route tables"
   default     = ""
 }
-
-variable "k8s_public_route_tables_propagating_vgws" {
-  description = "A list of VGWs the public route table should propagate."
+variable "private_route_tables_propagating_vgws" {
+  description = "A list of VGWs the private route table should propagate."
   default     = null
 }
-
-variable "k8s_public_route_tables_vpc_id" {
+variable "private_route_tables_vpc_id" {
   description = "The VPC ID."
   default     = ""
 }
-
-variable "k8s_public_route_tables_route_ipv4" {
+variable "private_route_tables_route_ipv4" {
   description = "The CIDR block of the route for IPv4."
   default     = []
 }
-
-variable "k8s_public_route_tables_route_ipv6" {
+variable "private_route_tables_route_ipv6" {
   description = "(Optional) The Ipv6 CIDR block of the route."
   default     = []
 }
 
-# custom route tables
-variable "enable_custom_route_tables" {
-  description = "Enable custom RT"
+#---------------------------------------------------------------------------------------------------------------------
+# Database route tables
+#---------------------------------------------------------------------------------------------------------------------
+variable "enable_database_route_tables" {
+  description = "Enable database Route Tables"
   default     = false
 }
-
-variable "custom_route_tables_name" {
-  description = "Set name for custom RT"
+variable "database_route_tables_name" {
+  description = "Set name for custom Route Tables"
   default     = ""
 }
-
-variable "custom_route_tables_vpc_id" {
+variable "database_route_tables_vpc_id" {
   description = "The VPC ID."
   default     = ""
 }
-
-variable "custom_route_tables_propagating_vgws" {
+variable "database_route_tables_propagating_vgws" {
   description = "(Optional) A list of virtual gateways for propagation."
   default     = null
 }
 
-variable "custom_route_tables_route_ipv4" {
+variable "database_route_tables_route_ipv4" {
   description = "The CIDR block of the route for IPv4."
   default     = []
 }
 
-variable "custom_route_tables_route_ipv6" {
+variable "database_route_tables_route_ipv6" {
   description = "(Optional) The Ipv6 CIDR block of the route."
   default     = []
 }

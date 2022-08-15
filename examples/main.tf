@@ -229,9 +229,11 @@ module "vpc" {
     icmp_type       = 0
     icmp_code       = 0
   }]
-  #manage_default_route_table = false
+  manage_default_route_table = false
   #default_route_table_name   = "My_Default_Route_Table"
   #default_route_table_routes = []
+
+
   # EIP
   #  enable_eip   = false
   #  nat_eip_name = ""
