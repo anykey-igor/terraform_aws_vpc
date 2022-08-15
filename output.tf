@@ -9,3 +9,8 @@ output "vpc_id" {
 output "vpc_cidr_block" {
   value = aws_vpc.cloud_vpc.cidr_block
 }
+
+output "region_use" {
+  value = var.region
+
+}

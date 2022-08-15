@@ -1,4 +1,4 @@
-# How to working with VPC module via Terraform
+# How working with VPC module via Terraform
 
 Import the module and retrieve whit terraform get or terraform get --update
 
