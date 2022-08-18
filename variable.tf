@@ -330,7 +330,6 @@ variable "default_route_table_name" {
   type        = string
   default     = null
 }
-
 variable "default_route_table_propagating_vgws" {
   description = "List of virtual gateways for propagation"
   type        = list(string)

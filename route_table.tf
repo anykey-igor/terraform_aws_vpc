@@ -134,17 +134,15 @@ resource "aws_route_table" "private_route_tables" {
 
 ## Create databse route table and the route to the internet or without
 resource "aws_route_table" "database_route_tables" {
-  #count = length(var.private_subnet_cidr) > 0 ? 1 : 0
-  #count = var.single_nat_gw ? length(var.availability_zones) > 0 ? length(var.availability_zones) : element(lookup(var.availability_zones_list, var.region), count.index) : 0
-  # nees
-  count = var.enable_nat_gw && length(var.private_subnet_cidr) > 0 ? (var.single_nat_gw ? 1 : (length(var.availability_zones) > 0 ? length(var.availability_zones) : length(lookup(var.availability_zones_list, var.region)))) : 0
-  vpc_id = var.private_route_tables_vpc_id != "" ? var.private_route_tables_vpc_id : (var.enable_vpc ? element(aws_vpc.cloud_vpc.*.id, 0) : null)
+  count = length(var.database_subnet_cidr) > 0 ? 1 : 0
 
-  propagating_vgws = var.private_route_tables_propagating_vgws
+  vpc_id = var.database_route_tables_vpc_id != "" ? var.database_route_tables_vpc_id : (var.enable_vpc ? element(aws_vpc.cloud_vpc.*.id, 0) : null) #aws_vpc.cloud_vpc.0.id : null)
+
+  propagating_vgws = var.database_route_tables_propagating_vgws
 
   dynamic "route" {
     iterator = route_ipv4
-    for_each = var.private_route_tables_route_ipv4
+    for_each = var.database_route_tables_route_ipv4
 
     content {
       cidr_block = lookup(route_ipv4.value, "cidr_block", "0.0.0.0/0")
@@ -163,7 +161,7 @@ resource "aws_route_table" "database_route_tables" {
 
   tags = merge(
     {
-      Name = var.private_route_tables_name != "" ? lower(var.private_route_tables_name) : "${lower(var.name)}-private-route-tables-${lower(var.environment)}"
+      Name = var.database_route_tables_name != "" ? lower(var.database_route_tables_name) : "${lower(var.name)}-database-route-tables-${lower(var.environment)}"
     },
     var.tags
   )

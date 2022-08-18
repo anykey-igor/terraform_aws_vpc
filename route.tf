@@ -38,4 +38,3 @@ resource "aws_route" "private_nat_gateway" {
     aws_nat_gateway.nat_gw
   ]
 }
-

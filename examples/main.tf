@@ -228,7 +228,8 @@ module "vpc" {
     ipv6_cidr_block = null
     icmp_type       = 0
     icmp_code       = 0
-  }]
+  },
+  ]
   manage_default_route_table = false
   #default_route_table_name   = "My_Default_Route_Table"
   #default_route_table_routes = []
@@ -239,3 +240,5 @@ module "vpc" {
   #  nat_eip_name = ""
 
 }
+
+
