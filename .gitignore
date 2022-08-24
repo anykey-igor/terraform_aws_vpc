@@ -30,3 +30,4 @@ override.tf.json
 
 .idea/*
 node_modules/*
+package*.json
