@@ -177,6 +177,7 @@ module "vpc" {
 
   name_database_subnet = "My_database_subnet"
   database_subnet_cidr = ["172.31.30.0/24", "172.31.31.0/24", "172.31.32.0/24"]
+  create_database_subnet_route_table = false
   #map_public_ip_on_launch  = false  #autoallocation public IP: default = false
 
   #allowed_ports           = ["80", "443"]

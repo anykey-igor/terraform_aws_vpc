@@ -61,7 +61,6 @@ variable "vpc_name" {
 variable "vpc_cidr" {
   description = "CIDR for the whole VPC"
   type        = string
-  #default     = "10.0.0.0/16"
 }
 variable "instance_tenancy" {
   description = "(Optional) A tenancy option for instances launched into the VPC"
@@ -256,28 +255,23 @@ variable "enable_network_acl" {
   type        = bool
   default     = false
 }
-
 variable "network_acl_name" {
   description = "Set name for VPC network acl"
   type        = string
   default     = ""
 }
-
 variable "network_acl_subnet_ids" {
   description = "(Optional) A list of Subnet IDs to apply the ACL to"
   default     = null
 }
-
 variable "network_acl_vpc_id" {
   description = "Set vpc_id for NACL"
   default     = ""
 }
-
 variable "network_acl_ingress" {
   description = "(Optional) Specifies an ingress rule. Parameters defined below. This argument is processed in attribute-as-blocks mode."
   default     = []
 }
-
 variable "network_acl_egress" {
   description = "(Optional) Specifies an egress rule. Parameters defined below. This argument is processed in attribute-as-blocks mode."
   default     = []
@@ -340,6 +334,7 @@ variable "default_route_table_routes" {
   type        = list(map(string))
   default     = []
 }
+
 #---------------------------------------------------------------------------------------------------------------------
 # Variable for AWS Public route tables
 #---------------------------------------------------------------------------------------------------------------------
@@ -395,6 +390,18 @@ variable "enable_database_route_tables" {
   description = "Enable database Route Tables"
   default     = false
 }
+# add new variable
+variable "create_database_subnet_route_table" {
+  description = "Controls if separate route table for database should be created"
+  type        = bool
+  default     = false
+}
+variable "create_database_internet_gateway_route" {
+  description = "Controls if an internet gateway route for public database access should be created"
+  type        = bool
+  default     = false
+}
+# -----------------
 variable "database_route_tables_name" {
   description = "Set name for custom Route Tables"
   default     = ""
@@ -407,12 +414,10 @@ variable "database_route_tables_propagating_vgws" {
   description = "(Optional) A list of virtual gateways for propagation."
   default     = null
 }
-
 variable "database_route_tables_route_ipv4" {
   description = "The CIDR block of the route for IPv4."
   default     = []
 }
-
 variable "database_route_tables_route_ipv6" {
   description = "(Optional) The Ipv6 CIDR block of the route."
   default     = []
@@ -425,7 +430,6 @@ variable "enable_custom_route_table_associations" {
   description = "Enable custom route table associations usage"
   default     = false
 }
-
 variable "custom_route_table_associations_stack" {
   description = "Set route table associations"
   default     = []

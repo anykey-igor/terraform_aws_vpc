@@ -13,7 +13,7 @@ resource "aws_route_table_association" "public_route_table_associations" {
     aws_subnet.public_subnets
   ]
 }
-#
+
 # private
 resource "aws_route_table_association" "private_route_table_associations" {
   count = length(var.private_subnet_cidr)

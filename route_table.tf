@@ -1,9 +1,8 @@
 #---------------------------------------------------------------------------------------------------------------------
 # Add AWS Route table
 #---------------------------------------------------------------------------------------------------------------------
-################################################################################
-# Default route
-################################################################################
+# Default route table
+#----------------------------------------------------------------------------------------------------------------------
 
 resource "aws_default_route_table" "default" {
   count = var.enable_vpc && var.manage_default_route_table ? 1 : 0
@@ -42,8 +41,9 @@ resource "aws_default_route_table" "default" {
   )
 }
 
-
+#----------------------------------------------------------------------------------------------------------------------
 # Create public route table
+#----------------------------------------------------------------------------------------------------------------------
 resource "aws_route_table" "public_route_tables" {
   count = length(var.public_subnet_cidr) > 0 ? 1 : 0
 
@@ -60,7 +60,6 @@ resource "aws_route_table" "public_route_tables" {
       gateway_id = lookup(route_ipv4.value, "gateway_id", null)
 
       egress_only_gateway_id    = lookup(route_ipv4.value, "egress_only_gateway_id", null)
-      #instance_id               = lookup(route_ipv4.value, "instance_id", null)
       nat_gateway_id            = lookup(route_ipv4.value, "nat_gateway_id", null)
       local_gateway_id          = lookup(route_ipv4.value, "local_gateway_id", null)
       network_interface_id      = lookup(route_ipv4.value, "network_interface_id", null)
@@ -86,8 +85,10 @@ resource "aws_route_table" "public_route_tables" {
     aws_vpc.cloud_vpc
   ]
 }
-#
-## Create private route table and the route to the internet
+
+#----------------------------------------------------------------------------------------------------------------------
+# Create private route table and the route to the internet
+#----------------------------------------------------------------------------------------------------------------------
 resource "aws_route_table" "private_route_tables" {
   #count = length(var.private_subnet_cidr) > 0 ? 1 : 0
   #count = var.single_nat_gw ? length(var.availability_zones) > 0 ? length(var.availability_zones) : element(lookup(var.availability_zones_list, var.region), count.index) : 0
@@ -105,7 +106,6 @@ resource "aws_route_table" "private_route_tables" {
       gateway_id = lookup(route_ipv4.value, "gateway_id", null)
 
       egress_only_gateway_id    = lookup(route_ipv4.value, "egress_only_gateway_id", null)
-      #instance_id               = lookup(route_ipv4.value, "instance_id", null)
       nat_gateway_id            = lookup(route_ipv4.value, "nat_gateway_id", null)
       local_gateway_id          = lookup(route_ipv4.value, "local_gateway_id", null)
       network_interface_id      = lookup(route_ipv4.value, "network_interface_id", null)
@@ -132,32 +132,14 @@ resource "aws_route_table" "private_route_tables" {
   ]
 }
 
-## Create databse route table and the route to the internet or without
+#----------------------------------------------------------------------------------------------------------------------
+# Create database route table and the route to the internet or without
+#----------------------------------------------------------------------------------------------------------------------
 resource "aws_route_table" "database_route_tables" {
-  count = length(var.database_subnet_cidr) > 0 ? 1 : 0
+ # count = length(var.database_subnet_cidr) > 0 ? 1 : 0
+  count = var.enable_vpc && var.create_database_subnet_route_table && length(var.database_subnet_cidr) > 0 ? var.single_nat_gw || var.create_database_internet_gateway_route ? 1 : length(var.database_subnet_cidr) : 1
 
   vpc_id = var.database_route_tables_vpc_id != "" ? var.database_route_tables_vpc_id : (var.enable_vpc ? element(aws_vpc.cloud_vpc.*.id, 0) : null) #aws_vpc.cloud_vpc.0.id : null)
-
-  propagating_vgws = var.database_route_tables_propagating_vgws
-
-  dynamic "route" {
-    iterator = route_ipv4
-    for_each = var.database_route_tables_route_ipv4
-
-    content {
-      cidr_block = lookup(route_ipv4.value, "cidr_block", "0.0.0.0/0")
-      gateway_id = lookup(route_ipv4.value, "gateway_id", null)
-
-      egress_only_gateway_id    = lookup(route_ipv4.value, "egress_only_gateway_id", null)
-      #instance_id               = lookup(route_ipv4.value, "instance_id", null)
-      nat_gateway_id            = lookup(route_ipv4.value, "nat_gateway_id", null)
-      local_gateway_id          = lookup(route_ipv4.value, "local_gateway_id", null)
-      network_interface_id      = lookup(route_ipv4.value, "network_interface_id", null)
-      transit_gateway_id        = lookup(route_ipv4.value, "transit_gateway_id", null)
-      vpc_endpoint_id           = lookup(route_ipv4.value, "vpc_endpoint_id", null)
-      vpc_peering_connection_id = lookup(route_ipv4.value, "vpc_peering_connection_id", null)
-    }
-  }
 
   tags = merge(
     {
